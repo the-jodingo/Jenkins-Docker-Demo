@@ -56,8 +56,8 @@ jenkins-microservices-cicd-demo/
     └── service.yaml
 
   # 3 GitHub → Jenkins (multi-stage pipeline)
-├── User Service → Docker Image → Docker Hub
-└── Product Service → Docker Image → Docker Hub
+ ── User Service → Docker Image → Docker Hub
+ ── Product Service → Docker Image → Docker Hub
 
 ↓## ✅ Prerequisites
 - Docker & Docker Compose installed
