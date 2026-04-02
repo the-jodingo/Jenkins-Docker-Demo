@@ -53,4 +53,4 @@ Learning Outcomes
 So the Kubernetes Deployments with 2 replicas, resource requests/limits, and health probes
 Services (ClusterIP)
 Ingress routing for multiple microservices
-Namespaces for isolatio
+Namespaces for isolation
