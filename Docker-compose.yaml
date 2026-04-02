@@ -1,20 +1,18 @@
 
-## 🛠️ Tech Stack
-- **Microservices**: Node.js + Express
-- **CI/CD**: Jenkins (Declarative Pipeline)
-- **Containerization**: Docker (multi-stage)
-- **Orchestration**: Docker Compose + Kubernetes manifests (bonus)
-- **Testing**: Jest
+version: '3.8'
 
-## ✅ Prerequisites
-- Docker & Docker Compose installed
-- Jenkins (recommended: run via Docker)
-- GitHub account + Docker Hub account
-- Basic knowledge of terminals
+services:
+  user-service:
+    image: ${DOCKER_REGISTRY:-yourusername}/user-service:${IMAGE_TAG:-latest}
+    build: ./services/user-service
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
 
-## 🚀 Step-by-Step Setup
+  product-service:
+    image: ${DOCKER_REGISTRY:-yourusername}/product-service:${IMAGE_TAG:-latest}
+    build: ./services/product-service
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
 
-### Step 1: Clone & Setup Repo
-```bash
-git clone https://github.com/YOUR-USERNAME/jenkins-microservices-cicd-demo.git
-cd jenkins-microservices-cicd-demo
