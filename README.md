@@ -102,10 +102,12 @@ After deploy:
 User Service: http://localhost:3000/api/users
 Product Service: http://localhost:3001/api/products
 
-# 🐞 Troubleshooting
+*** !!!! # 🐞 Troubleshooting
 
 "docker: not found" → Use Jenkins with Docker-in-Docker or install Docker on host
+
 Permission issues → sudo usermod -aG docker $USER
+
 Pipeline fails on test → Check Jest in services
 
 jenkins-microservices-cicd-demo/
