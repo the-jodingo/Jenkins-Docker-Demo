@@ -107,4 +107,21 @@ Product Service: http://localhost:3001/api/products
 "docker: not found" → Use Jenkins with Docker-in-Docker or install Docker on host
 Permission issues → sudo usermod -aG docker $USER
 Pipeline fails on test → Check Jest in services
+
+jenkins-microservices-cicd-demo/
+├── ...
+├── k8s/
+│   ├── namespace.yaml
+│   ├── user-service/
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   ├── product-service/
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   ├── ingress.yaml                 # (optional but recommended)
+│   └── README.md                    # instructions for Kubernetes
+└── ...
+
+
+
    
