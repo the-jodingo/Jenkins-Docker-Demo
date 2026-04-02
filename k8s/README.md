@@ -35,3 +35,7 @@ kubectl scale deployment/user-service --replicas=4 -n microservices-demo
 
 # Delete everything
 kubectl delete -f k8s/ --all
+
+# With port-forward (quick testing)
+kubectl port-forward svc/user-service 3000:80 -n microservices-demo
+kubectl port-forward svc/product-service 3001:80 -n microservices-demo
