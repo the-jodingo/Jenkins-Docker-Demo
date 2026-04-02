@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  user-service:
+    image: ${DOCKER_REGISTRY:-yourusername}/user-service:${IMAGE_TAG:-latest}
+    build: ./services/user-service
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  product-service:
+    image: ${DOCKER_REGISTRY:-yourusername}/product-service:${IMAGE_TAG:-latest}
+    build: ./services/product-service
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
