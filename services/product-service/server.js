@@ -4,10 +4,11 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 
-const users = [
-  { id: 1, name: 'Alice', email: 'alice@example.com' },
-  { id: 2, name: 'Bob', email: 'bob@example.com' }
+const products = [
+  { id: 101, name: 'Laptop', price: 999 },
+  { id: 102, name: 'Phone', price: 599 }
 ];
+app.get('/api/products', (req, res) => res.json(products));
 
 app.get('/api/users', (req, res) => res.json(users));
 app.get('/api/users/:id', (req, res) => {
