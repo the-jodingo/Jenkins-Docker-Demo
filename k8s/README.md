@@ -37,5 +37,20 @@ kubectl scale deployment/user-service --replicas=4 -n microservices-demo
 kubectl delete -f k8s/ --all
 
 # With port-forward (quick testing)
+bash
+
 kubectl port-forward svc/user-service 3000:80 -n microservices-demo
 kubectl port-forward svc/product-service 3001:80 -n microservices-demo
+
+With Ingress : If you want to test this out as an extra learning point
+
+** Add demo.local to your /etc/hosts pointing to your cluster IP, then access:
+
+http://demo.local/api/users
+http://demo.local/api/products
+Learning Outcomes
+
+So the Kubernetes Deployments with 2 replicas, resource requests/limits, and health probes
+Services (ClusterIP)
+Ingress routing for multiple microservices
+Namespaces for isolatio
