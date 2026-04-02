@@ -1,81 +1,86 @@
-# 🚀 Jenkins Microservices CI/CD Pipeline Demo
+[README.md](https://github.com/user-attachments/files/26448340/README.md)
 
-**Hands-on DevOps Project** – Build, Test, Containerize & Deploy **two Node.js microservices** using a **multi-stage Jenkins Pipeline**.
+# 🚀 Jenkins Microservices CI/CD Pipeline Project
 
-Perfect for all in one devops. I added a bonus k8s, its not necessary but you can try and polish it too if you want to.
+**Hands-on DevOps Project** 
+
+- Build, Test, Containerize & Deploy **two Node.js microservices**
+- Use a **multi-stage Jenkins Pipeline**.
+
+Perfect for resumes, GitHub profile pinning, and DevOps interviews!
 
 ![CI/CD Status](https://img.shields.io/badge/CI%2FCD-Jenkins-blue)
 ![Docker](https://img.shields.io/badge/Docker-Ready-green)
 ![License](https://img.shields.io/badge/License-MIT-green)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-Ready-green)
 
 ## 📋 Table of Contents
 - [Project Overview](#project-overview)
 - [Architecture](#architecture)
-- [Tech Stack](#tech-stack)
 - [Prerequisites](#prerequisites)
 - [Step-by-Step Setup](#step-by-step-setup)
-- [How the Pipeline Works](#how-the-pipeline-works) { Checkout → Parallel (Build + Test User + Product) → Parallel (Docker Build + Push) → Deploy }
-- [Run Locally](#run-locally)
 - [Learning Outcomes](#learning-outcomes)
 - [Troubleshooting](#troubleshooting)
 
-# 1. 📖 Project Overview
-Two independent microservices:
-- **User Service** → `/api/users` (port 3000)
-- **Product Service** → `/api/products` (port 3001)
 
-Jenkins automates everything in a **multi-stage pipeline**:
-1. Checkout
-2. Build & Test (parallel)
-3. Docker Build & Push (parallel)
-4. Deploy (docker-compose)
+## 🏗️ Architecture
 
-## 2. 🏗️ Architecture
+GitHub → Jenkins Pipeline 
 
-jenkins-microservices-cicd-demo/
-├── README.md
-├── Jenkinsfile
-├── docker-compose.yml
-├── .gitignore
-├── services/
-│   ├── user-service/
-│   │   ├── Dockerfile
-│   │   ├── package.json
-│   │   ├── server.js
-│   │   └── __tests__/
-│   │       └── server.test.js
-│   └── product-service/
-│       ├── Dockerfile
-│       ├── package.json
-│       ├── server.js
-│       └── __tests__/
-│           └── server.test.js
-└── k8s/                     # (Bonus - for advanced learning)
-    ├── deployment-user.yaml
-    ├── deployment-product.yaml
-    └── service.yaml
+>> User Service → Docker Image → Docker Hub
+>> Product Service → Docker Image → Docker Hub
+>>>
+docker-compose up.
 
-  # 3 GitHub → Jenkins (multi-stage pipeline)
- ── User Service → Docker Image → Docker Hub
- ── Product Service → Docker Image → Docker Hub
 
-↓## ✅ Prerequisites
+## Appendix
+
+Additional information for Setup.
+
+
+## 🛠️ Tech Stack
+- **Microservices**: Node.js + Express
+- **CI/CD**: Jenkins (Declarative Pipeline)
+- **Containerization**: Docker (multi-stage)
+- **Orchestration**: Docker Compose + Kubernetes manifests (bonus)
+- **Testing**
+
+## ✅ Prerequisites
 - Docker & Docker Compose installed
 - Jenkins (recommended: run via Docker)
 - GitHub account + Docker Hub account
 - Basic knowledge of terminals
 
-# Step 4: Run Jenkins (Easiest Way)
-   docker run -d -p 8080:8080 -p 50000:50000 \
-   -v jenkins_home:/var/jenkins_home \
-   --name jenkins jenkins/jenkins:lts-jdk17
-   
-Open http://localhost:8080
-Unlock Jenkins (password in container logs: docker logs jenkins)
-Install suggested plugins
-Create admin user
+## 🚀 Step-by-Step Setup
 
-# Step 5: Add Docker Hub Credentials in Jenkins
+### Step 1: Clone & Setup Repo
+```bash
+git clone https://github.com/YOUR-USERNAME/jenkins-microservices-cicd-demo.git
+
+cd jenkins-microservices-cicd-demo.
+
+
+## Jenkins deploy
+
+- To deploy this Jenkins
+
+```bash
+
+ docker run -d -p 8080:8080 -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  --name jenkins jenkins/jenkins:lts-jdk17
+  
+```
+
+- Open http://localhost:8080
+
+- Unlock Jenkins (password in container logs: docker logs jenkins)
+
+- Install suggested plugins
+
+- Create admin user
+
+Step 3: Add Docker Hub Credentials in Jenkins
 
 Jenkins → Manage Jenkins → Credentials
 Add new credential → Kind: Username with password
@@ -84,7 +89,7 @@ Username: your Docker Hub username
 Password: your Docker Hub password
 
 
-# Step 6: Create Pipeline Job
+Step 4: Create Pipeline Job
 
 New Item → Pipeline → Name: microservices-cicd
 Pipeline → Pipeline script from SCM
@@ -93,37 +98,106 @@ Branch: main
 Script Path: Jenkinsfile
 Save
 
-# Step 7: Run the Pipeline
+Step 5: Run the Pipeline
+
 Push code → Jenkins auto-triggers (or click Build Now)
 
-# Step 8: Access Services
+Step 6: Access Services
+
 After deploy:
 
 User Service: http://localhost:3000/api/users
 Product Service: http://localhost:3001/api/products
 
-*** !!!! # 🐞 Troubleshooting
 
-"docker: not found" → Use Jenkins with Docker-in-Docker or install Docker on host
-
-Permission issues → sudo usermod -aG docker $USER
-
-Pipeline fails on test → Check Jest in services
-
-jenkins-microservices-cicd-demo/
-├── ...
-├── k8s/
-│   ├── namespace.yaml
-│   ├── user-service/
-│   │   ├── deployment.yaml
-│   │   └── service.yaml
-│   ├── product-service/
-│   │   ├── deployment.yaml
-│   │   └── service.yaml
-│   ├── ingress.yaml                 # (optional but recommended)
-│   └── README.md                    # instructions for Kubernetes
-└── ...
+## Jenkins-file 
 
 
+```groovy
+pipeline {
+    agent any
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-cred')
+        DOCKER_REGISTRY = "${DOCKERHUB_CREDENTIALS_USR}"
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
+    }
 
-   
+    stages {
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+                echo '✅ Code checked out'
+            }
+        }
+
+        stage('Build & Test Services (Parallel)') {
+            parallel {
+                stage('User Service') {
+                    steps {
+                        dir('services/user-service') {
+                            sh 'npm install'
+                            sh 'npm test'
+                            echo '✅ User Service built & tested'
+                        }
+                    }
+                }
+                stage('Product Service') {
+                    steps {
+                        dir('services/product-service') {
+                            sh 'npm install'
+                            sh 'npm test'
+                            echo '✅ Product Service built & tested'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Build & Push Docker Images (Parallel)') {
+            parallel {
+                stage('User Service Docker') {
+                    steps {
+                        dir('services/user-service') {
+                            sh "docker build -t ${DOCKER_REGISTRY}/user-service:${IMAGE_TAG} ."
+                            sh "docker tag ${DOCKER_REGISTRY}/user-service:${IMAGE_TAG} ${DOCKER_REGISTRY}/user-service:latest"
+                            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                            sh "docker push ${DOCKER_REGISTRY}/user-service:${IMAGE_TAG}"
+                            sh "docker push ${DOCKER_REGISTRY}/user-service:latest"
+                            echo '✅ User Service image pushed'
+                        }
+                    }
+                }
+                stage('Product Service Docker') {
+                    steps {
+                        dir('services/product-service') {
+                            sh "docker build -t ${DOCKER_REGISTRY}/product-service:${IMAGE_TAG} ."
+                            sh "docker tag ${DOCKER_REGISTRY}/product-service:${IMAGE_TAG} ${DOCKER_REGISTRY}/product-service:latest"
+                            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                            sh "docker push ${DOCKER_REGISTRY}/product-service:${IMAGE_TAG}"
+                            sh "docker push ${DOCKER_REGISTRY}/product-service:latest"
+                            echo '✅ Product Service image pushed'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy with Docker Compose') {
+            steps {
+                sh 'docker-compose down || true'
+                sh "IMAGE_TAG=${IMAGE_TAG} DOCKER_REGISTRY=${DOCKER_REGISTRY} docker-compose up -d --pull always"
+                echo '🚀 Services deployed!'
+                sh 'docker-compose ps'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished 🎉'
+        }
+        success {
+            echo '✅ SUCCESS - Everything deployed!'
+        }
+    }
+}
