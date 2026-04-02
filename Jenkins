@@ -1,0 +1,20 @@
+
+## 🛠️ Tech Stack
+- **Microservices**: Node.js + Express
+- **CI/CD**: Jenkins (Declarative Pipeline)
+- **Containerization**: Docker (multi-stage)
+- **Orchestration**: Docker Compose + Kubernetes manifests (bonus)
+- **Testing**: Jest
+
+## ✅ Prerequisites
+- Docker & Docker Compose installed
+- Jenkins (recommended: run via Docker)
+- GitHub account + Docker Hub account
+- Basic knowledge of terminals
+
+## 🚀 Step-by-Step Setup
+
+### Step 1: Clone & Setup Repo
+```bash
+git clone https://github.com/YOUR-USERNAME/jenkins-microservices-cicd-demo.git
+cd jenkins-microservices-cicd-demo
