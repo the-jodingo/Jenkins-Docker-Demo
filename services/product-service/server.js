@@ -8,6 +8,7 @@ const products = [
   { id: 101, name: 'Laptop', price: 999 },
   { id: 102, name: 'Phone', price: 599 }
 ];
+
 app.get('/api/products', (req, res) => res.json(products));
 
 app.get('/api/users', (req, res) => res.json(users));
