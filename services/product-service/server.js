@@ -28,6 +28,8 @@ app.get('/api/users/:id', (req, res) => {
 
 app.get('/health', (req, res) => res.status(200).json({ status: 'healthy', service: 'product-service' }));
 
-app.listen(PORT, () => console.log(`Product Service running on port ${PORT}`));
+if (require.main === module) {
+  app.listen(PORT, () => console.log(`Product Service running on port ${PORT}`));
+}
 
 module.exports = app;
