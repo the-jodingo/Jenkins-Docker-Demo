@@ -1,9 +1,6 @@
-
-#### 2. `Jenkinsfile`
-
-```groovy
 pipeline {
     agent any
+
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-cred')
         DOCKER_REGISTRY = "${DOCKERHUB_CREDENTIALS_USR}"
@@ -14,7 +11,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 checkout scm
-                echo '✅ Code checked out'
+                echo 'Code checked out'
             }
         }
 
@@ -25,7 +22,7 @@ pipeline {
                         dir('services/user-service') {
                             sh 'npm install'
                             sh 'npm test'
-                            echo '✅ User Service built & tested'
+                            echo 'User Service built & tested'
                         }
                     }
                 }
@@ -34,7 +31,7 @@ pipeline {
                         dir('services/product-service') {
                             sh 'npm install'
                             sh 'npm test'
-                            echo '✅ Product Service built & tested'
+                            echo 'Product Service built & tested'
                         }
                     }
                 }
@@ -51,7 +48,7 @@ pipeline {
                             sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                             sh "docker push ${DOCKER_REGISTRY}/user-service:${IMAGE_TAG}"
                             sh "docker push ${DOCKER_REGISTRY}/user-service:latest"
-                            echo '✅ User Service image pushed'
+                            echo 'User Service image pushed'
                         }
                     }
                 }
@@ -63,7 +60,7 @@ pipeline {
                             sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                             sh "docker push ${DOCKER_REGISTRY}/product-service:${IMAGE_TAG}"
                             sh "docker push ${DOCKER_REGISTRY}/product-service:latest"
-                            echo '✅ Product Service image pushed'
+                            echo 'Product Service image pushed'
                         }
                     }
                 }
@@ -74,7 +71,7 @@ pipeline {
             steps {
                 sh 'docker-compose down || true'
                 sh "IMAGE_TAG=${IMAGE_TAG} DOCKER_REGISTRY=${DOCKER_REGISTRY} docker-compose up -d --pull always"
-                echo '🚀 Services deployed!'
+                echo 'Services deployed'
                 sh 'docker-compose ps'
             }
         }
@@ -82,10 +79,13 @@ pipeline {
 
     post {
         always {
-            echo 'Pipeline finished 🎉'
+            echo 'Pipeline finished'
         }
         success {
-            echo '✅ SUCCESS - Everything deployed!'
+            echo 'SUCCESS - Everything deployed'
+        }
+        failure {
+            echo 'Pipeline failed'
         }
     }
 }
